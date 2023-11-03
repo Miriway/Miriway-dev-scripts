@@ -1,0 +1,37 @@
+#!/bin/bash -e
+
+if [ $# -gt 0 ]; then
+  container_name="miriway-${1/./-}"
+else
+  container_name=miriway-23-10
+fi
+
+if ! multipass start "${container_name}"; then
+
+username=${USER}
+
+echo "* To create a miriway test instance we want to set up ssh, To do this we *"
+echo "* use Launchpad to retrieve your public key.                             *"
+echo ""
+read -p "Please enter your Launchpad ID: " lpname
+
+multipass launch --name "${container_name}" --disk 10G --cloud-init - "${@:-23.10}" <<EOF
+packages:
+    - fonts-freefont-ttf
+    - fonts-font-awesome
+    - gnome-console
+    - ubuntu-wallpapers
+runcmd:
+    - sudo snap install --classic --channel edge/pr72 miriway
+    - sudo snap install ubuntu-frame-vnc && sudo snap connect ubuntu-frame-vnc:wayland
+    - sudo apt install kate
+users:
+    - name: ${username}
+      ssh_import_id: [lp:${lpname}]
+      sudo:  ALL=(ALL) NOPASSWD:ALL
+      shell: /usr/bin/bash
+EOF
+fi
+host_ip=$(multipass info "${container_name}" --format csv | awk -F, '/^'"${container_name}"'/ { print $3 }')
+echo "To start server : ssh ${host_ip} miriway.vnc-server"
+echo "To access server: frame-it.vnc ${host_ip}"
