@@ -32,6 +32,17 @@ users:
       shell: /usr/bin/bash
 EOF
 fi
+
+if ! command -v ssh > /dev/null
+then
+  echo "WARNING: You need to install ssh: sudo apt install openssh-client"
+fi
+
+if ! command -v frame-it > /dev/null
+then
+  echo "WARNING: You need to install frame-it: sudo snap install frame-it --classic"
+fi
+
 host_ip=$(multipass info "${container_name}" --format csv | awk -F, '/^'"${container_name}"'/ { print $3 }')
 echo "To start server : ssh ${host_ip} miriway.vnc-server"
 echo "To access server: frame-it.vnc ${host_ip}"
