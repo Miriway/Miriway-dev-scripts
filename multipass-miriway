@@ -15,7 +15,7 @@ echo "* use Launchpad to retrieve your public key.                             *
 echo ""
 read -p "Please enter your Launchpad ID: " lpname
 
-multipass launch --name "${container_name}" --disk 10G --cloud-init - "${@:-23.10}" <<EOF
+multipass launch --name "${container_name}" --disk 10G --memory 2G --cpus 2 --timeout 600 --cloud-init - "${@:-23.10}" <<EOF
 packages:
     - fonts-freefont-ttf
     - fonts-font-awesome
