@@ -22,7 +22,7 @@ packages:
     - gnome-console
     - ubuntu-wallpapers
 runcmd:
-    - sudo snap install --classic --channel edge/pr72 miriway
+    - sudo snap install --classic --channel miriway
     - sudo snap install ubuntu-frame-vnc && sudo snap connect ubuntu-frame-vnc:wayland
     - sudo apt install kate
 users:
